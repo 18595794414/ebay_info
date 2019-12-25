@@ -66,16 +66,19 @@ ITEM_PIPELINES = {
 }
 
 
-# AUTOTHROTTLE_ENABLED = True
+# 开启自动限速
+AUTOTHROTTLE_ENABLED = True
 
 # 开始下载时限速并延迟时间
-# AUTOTHROTTLE_START_DELAY = 5
+AUTOTHROTTLE_START_DELAY = 1
 
 # 高并发请求时最大延迟时间
-# AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_MAX_DELAY = 15
 
-# AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-# Enable showing throttling stats for every response received:
+# 平均每秒并发数
+AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
+
+# 是否显示
 # AUTOTHROTTLE_DEBUG = False
 
 # 打开缓存
