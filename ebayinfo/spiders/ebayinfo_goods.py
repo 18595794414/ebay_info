@@ -52,8 +52,10 @@ class EbayinfoShopSpider(RedisSpider):
                 yield scrapy.Request(url=url,
                                      callback=self.parse_goodinfo)
 
+
+            if response.xpath('//td[@class="pagn-next"]'):
                 next_page = response.xpath('//td[@class="pagn-next"]/a/@href').get()
-                if next_page != '#':
+                if next_page != 'javascript:;':
 
                     yield scrapy.Request(url=next_page,
                                          callback=self.parse_list)
