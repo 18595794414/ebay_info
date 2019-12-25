@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import glob
+import os
 import re
+from datetime import datetime
 
 import scrapy
 
@@ -11,7 +14,7 @@ class EbayinfoShopSpider(RedisSpider):
     name = 'ebayinfo_goods'
     allowed_domains = ['ebay.com']
     redis_key = 'ebayinfo_goods:start_urls'
-    count = 1
+
 
     # 使用单独的redis配置
     custom_settings = {
@@ -50,12 +53,11 @@ class EbayinfoShopSpider(RedisSpider):
                                      callback=self.parse_goodinfo)
 
                 next_page = response.xpath('//td[@class="pagn-next"]/a/@href').get()
-                if next_page:
-                    self.count += 1
+                if next_page != '#':
+
                     yield scrapy.Request(url=next_page,
                                          callback=self.parse_list)
-                else:
-                    self.count = 0
+
 
     # 获取商品详情
     def parse_goodinfo(self, response):
@@ -68,6 +70,17 @@ class EbayinfoShopSpider(RedisSpider):
             # 保存商品源码
             with open(r'D:/Spider_Demo/goods_html/' + good_id + '.html', 'w', encoding='utf-8') as f:
                 f.write(response.text)
+
+        time_str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+        path = 'W:/Gc/goods_html/*.html'
+        file_num = glob.glob(path)
+        if len(file_num) == 10000:
+            haozip = f'HaoZipC a -tzip {time_str}.zip {path}'
+            os.popen(haozip)
+            file_list = file_num[:10000].copy()
+            for file_name in file_list:
+                os.remove(file_name)
+
 
         good_name = response.xpath('//h1[@id="itemTitle"]/text()').get()
         price_dollar = response.xpath('//span[@id="prcIsum"]/@content').get()
