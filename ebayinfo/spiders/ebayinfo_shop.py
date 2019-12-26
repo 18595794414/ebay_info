@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-import glob
-import os
 import re
-from datetime import datetime
 
 import scrapy
 from scrapy_redis.spiders import RedisSpider
@@ -40,22 +37,7 @@ class EbayinfoShopSpider(RedisSpider):
 
         if response.status == 200:
             seller = response.meta['seller']
-            seller_name = re.sub(r'\*|\.|\。|\\|\?|\:|\\"|\||"|\<|\》|/', '', seller)
-
-            # 保存商店源码
-            with open(r'D:/Spider_Demo/shop_html/' + seller_name + '.html', 'a', encoding='utf-8') as f:
-                f.write(response.text)
-
-        time_str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
-        path = 'W:/Gc/goods_html/*.html'
-        file_num = glob.glob(path)
-        if len(file_num) == 10000:
-            haozip = f'HaoZipC a -tzip {time_str}.zip {path}'
-            os.popen(haozip)
-            file_list = file_num[:10000].copy()
-            for file_name in file_list:
-                os.remove(file_name)
-
+            html = response.body.decode()
             followers_num = response.xpath('//div[@class="mem_info"]/span[1]/span/span/text()').get()
             if followers_num != None:
                 followers_num = ''
@@ -97,12 +79,12 @@ class EbayinfoShopSpider(RedisSpider):
                 Shipping_time_score = ''
                 Shipping_charges_score = ''
 
-            item = EbayItemShop(seller_name=seller_name, followers_num=followers_num, country=country,
+            item = EbayItemShop(seller_name=seller, followers_num=followers_num, country=country,
                                 positive_feedback_percer=positive_feedback_percer, Feedback_score=Feedback_score,
                                 Item_s_described_score=Item_s_described_score, Communication_score=Communication_score,
                                 Shipping_time_score=Shipping_time_score, Shipping_charges_score=Shipping_charges_score,
                                 seller_text=seller_text, Positive_feedback=Positive_feedback,
                                 Neutral_feedback=Neutral_feedback, Negative_feedback=Negative_feedback, views=views,
-                                Reviews=Reviews, goods_num=goods_num, Member_since=Member_since, shop_url=shop_url)
+                                Reviews=Reviews, goods_num=goods_num, Member_since=Member_since, shop_url=shop_url, html=html)
 
             yield item

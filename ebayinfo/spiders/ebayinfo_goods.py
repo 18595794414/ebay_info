@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-import glob
-import os
 import re
-from datetime import datetime
 
 import scrapy
 
@@ -68,22 +65,7 @@ class EbayinfoShopSpider(RedisSpider):
 
         if good_id != None:
             good_id = good_id.group(1)
-
-            # 保存商品源码
-            with open(r'D:/Spider_Demo/goods_html/' + good_id + '.html', 'w', encoding='utf-8') as f:
-                f.write(response.text)
-
-        time_str = datetime.now().strftime('%Y-%m-%d-%H%M%S')
-        path = 'W:/Gc/goods_html/*.html'
-        file_num = glob.glob(path)
-        if len(file_num) == 10000:
-            haozip = f'HaoZipC a -tzip {time_str}.zip {path}'
-            os.popen(haozip)
-            file_list = file_num[:10000].copy()
-            for file_name in file_list:
-                os.remove(file_name)
-
-
+        html = response.body.decode()
         good_name = response.xpath('//h1[@id="itemTitle"]/text()').get()
         price_dollar = response.xpath('//span[@id="prcIsum"]/@content').get()
         price_RMB = response.xpath('//div[@id="prcIsumConv"]/span/text()').get()
@@ -125,5 +107,5 @@ class EbayinfoShopSpider(RedisSpider):
         item = EbayItemGood(good_id=good_id, good_name=good_name, price_dollar=price_dollar, price_RMB=price_RMB,
                             project_location=project_location, brand=brand, seller_name=seller_name,
                             sales_count=sales_count, cat_1=cat_1, cat_2=cat_2, cat_3=cat_3, cat_4=cat_4, cat_5=cat_5,
-                            cat_6=cat_6)
+                            cat_6=cat_6, html=html)
         yield item
