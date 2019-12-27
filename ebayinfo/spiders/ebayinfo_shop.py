@@ -33,22 +33,31 @@ class EbayinfoShopSpider(RedisSpider):
 
     # 获取商家详情
     def parse_shop(self, response):
+
         global Shipping_time_score, Item_s_described_score, Communication_score, Shipping_charges_score, Positive_feedback, Neutral_feedback, Negative_feedback
 
         if response.status == 200:
             seller = response.meta['seller']
+
             html = response.body.decode()
+
             followers_num = response.xpath('//div[@class="mem_info"]/span[1]/span/span/text()').get()
             if followers_num != None:
                 followers_num = ''
+
             country = response.xpath('//div[@class="mem_info"]/span[last()]/text()').get()
+
             positive_feedback_percer = response.xpath('//div[@class="perctg"]/text()').get()
+
             if positive_feedback_percer:
                 positive_feedback_percer = positive_feedback_percer.split()[0]
+
             Feedback_score = response.xpath('//span[@class="mbg-l"]/a[last()]/text()').get()
+
             seller_text = response.xpath('//h2[@class="bio inline_value"]/text()').get()
             if seller_text != None:
                 seller_text = ' '.join(seller_text.split())
+
             feedback = response.xpath('//div[@class="score"]/span[@class="num"]/text()').getall()
             if feedback != []:
                 Positive_feedback = feedback[0]
@@ -58,15 +67,21 @@ class EbayinfoShopSpider(RedisSpider):
                 Positive_feedback = ''
                 Neutral_feedback = ''
                 Negative_feedback = ''
+
             views = re.search(r'class="info" &gt;(.*?)&lt;/span&gt; Views', response.text)
             if views:
                 views = views.group(1)
+
             Reviews = response.xpath('//div[@class="mem_info"]/span[3]/span/span/text()').get()
             if Reviews != None:
                 Reviews = ''
+
             goods_num = response.xpath('//span[@class="sell_count"]/a/text()').get()
+
             Member_since = response.xpath('//div[@class="mem_info"]/span[5]/span[2]/text()').get()
+
             shop_url = response.xpath('//span[@class="sell_count"]/a/@href').get()
+
             scores = response.xpath('//div[@class="fl each"]/span[starts-with(@class, "dsr_count")]/text()').getall()
             if scores != []:
                 Item_s_described_score = scores[0]

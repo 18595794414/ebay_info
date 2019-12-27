@@ -9,12 +9,6 @@ COMMANDS_MODULE = 'ebayinfo.commands'
 # 禁用机器协议
 ROBOTSTXT_OBEY = False
 
-
-# 并发
-CONCURRENT_REQUESTS = 16
-
-DOWNLOAD_DELAY = 0.3
-
 # 下载超时时间
 DOWNLOAD_TIMEOUT = 30
 
@@ -76,7 +70,7 @@ AUTOTHROTTLE_START_DELAY = 1
 AUTOTHROTTLE_MAX_DELAY = 15
 
 # 平均每秒并发数
-AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
+AUTOTHROTTLE_TARGET_CONCURRENCY = 6.0
 
 # 是否显示
 # AUTOTHROTTLE_DEBUG = False
@@ -93,7 +87,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 4.0
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
-DUPEFILTER_CLASS = 'scrapy_redis.dupefilter.RFPDupeFilter'
-REDIS_URL = 'redis://192.168.0.230:6379/0'
-SCHEDULER_PERSIST = True
+# SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
+# DUPEFILTER_CLASS = 'scrapy_redis.dupefilter.RFPDupeFilter'
+# REDIS_URL = 'redis://192.168.0.230:6379/0'
+# SCHEDULER_PERSIST = True
